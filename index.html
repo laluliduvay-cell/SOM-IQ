@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>SoʻmIQ Bank — Kalkulator</title>
+  <meta name="description" content="SoʻmIQ Bank kredit, depozit va valyuta kalkulyatori. Oylik toʻlovni, depozit daromadini va valyuta kursini hisoblang.">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-logo">
+        <svg viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="#1D9E75"/>
+          <text x="16" y="22" text-anchor="middle" font-size="16" font-weight="700" fill="white" font-family="system-ui">S</text>
+        </svg>
+        <h1>SoʻmIQ Bank</h1>
+      </div>
+      <p>Bank kalkulyatori</p>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="kredit" role="tab" aria-selected="true" id="tab-kredit">Kredit</button>
+      <button class="tab" data-tab="depozit" role="tab" aria-selected="false" id="tab-depozit">Depozit</button>
+      <button class="tab" data-tab="valyuta" role="tab" aria-selected="false" id="tab-valyuta">Valyuta</button>
+    </div>
+
+    <!-- KREDIT TAB -->
+    <div class="tab-content active" id="kredit" role="tabpanel" aria-labelledby="tab-kredit">
+      <div class="card">
+        <div class="card-title">Kredit kalkulyatori</div>
+        <div class="form-group">
+          <label for="kredit-summa">Kredit summasi</label>
+          <div class="input-wrapper">
+            <input type="number" id="kredit-summa" class="has-suffix" placeholder="10 000 000" inputmode="numeric">
+            <span class="suffix">soʻm</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="kredit-muddat">Muddat</label>
+          <div class="input-wrapper">
+            <input type="number" id="kredit-muddat" class="has-suffix" placeholder="12" inputmode="numeric">
+            <span class="suffix">oy</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="kredit-foiz">Yillik foiz stavkasi</label>
+          <div class="input-wrapper">
+            <input type="number" id="kredit-foiz" class="has-suffix" placeholder="24" inputmode="decimal" step="0.1">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+        <button class="btn" id="kredit-btn">Hisoblash</button>
+      </div>
+      <div class="results" id="kredit-results">
+        <div class="results-title">Natijalar</div>
+        <div class="result-row">
+          <span class="result-label">Oylik toʻlov</span>
+          <span class="result-value highlight" id="kredit-oylik">—</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Umumiy toʻlov</span>
+          <span class="result-value" id="kredit-umumiy">—</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Umumiy foiz</span>
+          <span class="result-value" id="kredit-foiz-sum">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEPOZIT TAB -->
+    <div class="tab-content" id="depozit" role="tabpanel" aria-labelledby="tab-depozit">
+      <div class="card">
+        <div class="card-title">Depozit kalkulyatori</div>
+        <div class="form-group">
+          <label for="depozit-summa">Depozit summasi</label>
+          <div class="input-wrapper">
+            <input type="number" id="depozit-summa" class="has-suffix" placeholder="5 000 000" inputmode="numeric">
+            <span class="suffix">soʻm</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="depozit-muddat">Muddat</label>
+          <div class="input-wrapper">
+            <input type="number" id="depozit-muddat" class="has-suffix" placeholder="12" inputmode="numeric">
+            <span class="suffix">oy</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="depozit-foiz">Yillik foiz stavkasi</label>
+          <div class="input-wrapper">
+            <input type="number" id="depozit-foiz" class="has-suffix" placeholder="23" inputmode="decimal" step="0.1">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+        <button class="btn" id="depozit-btn">Hisoblash</button>
+      </div>
+      <div class="results" id="depozit-results">
+        <div class="results-title">Natijalar</div>
+        <div class="result-row">
+          <span class="result-label">Jami daromad</span>
+          <span class="result-value highlight" id="depozit-daromad">—</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Oylik daromad</span>
+          <span class="result-value" id="depozit-oylik">—</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Yakuniy summa</span>
+          <span class="result-value" id="depozit-yakuniy">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VALYUTA TAB -->
+    <div class="tab-content" id="valyuta" role="tabpanel" aria-labelledby="tab-valyuta">
+      <div class="card">
+        <div class="card-title">Valyuta konvertori</div>
+        <div class="form-group">
+          <label for="valyuta-summa">Summa</label>
+          <div class="input-wrapper">
+            <input type="number" id="valyuta-summa" placeholder="100" inputmode="decimal">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="valyuta-from">Qaysi valyutadan</label>
+          <div class="select-wrapper">
+            <select id="valyuta-from">
+              <option value="UZS">🇺🇿 UZS — Oʻzbek soʻmi</option>
+              <option value="USD" selected>🇺🇸 USD — AQSH dollari</option>
+              <option value="EUR">🇪🇺 EUR — Yevro</option>
+            </select>
+          </div>
+        </div>
+        <div class="swap-section">
+          <button class="swap-btn" id="swap-btn" title="Almashish">
+            <svg viewBox="0 0 24 24"><path d="M7.5 3.5L3.5 7.5M3.5 7.5L7.5 11.5M3.5 7.5H16.5M16.5 20.5L20.5 16.5M20.5 16.5L16.5 12.5M20.5 16.5H7.5"/><path d="M7.5 3.5L3.5 7.5M3.5 7.5L7.5 11.5M3.5 7.5H16.5M16.5 20.5L20.5 16.5M20.5 16.5L16.5 12.5M20.5 16.5H7.5" stroke="#1D9E75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </button>
+        </div>
+        <div class="form-group">
+          <label for="valyuta-to">Qaysi valyutaga</label>
+          <div class="select-wrapper">
+            <select id="valyuta-to">
+              <option value="UZS" selected>🇺🇿 UZS — Oʻzbek soʻmi</option>
+              <option value="USD">🇺🇸 USD — AQSH dollari</option>
+              <option value="EUR">🇪🇺 EUR — Yevro</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn" id="valyuta-btn">Konvertatsiya</button>
+      </div>
+      <div class="currency-result" id="valyuta-results">
+        <div class="amount" id="valyuta-result-amount">—</div>
+        <div class="label" id="valyuta-result-label"></div>
+      </div>
+      <div class="rate-info" id="valyuta-rate-info"></div>
+    </div>
+
+    <footer class="footer">
+      <p>© 2026 SoʻmIQ Bank. Barcha hisob-kitoblar taxminiy.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
