@@ -41,6 +41,17 @@ function formatDecimal(num, decimals) {
   });
 }
 
+// ===== ANALYTICS STATE =====
+let totalKredit = 0;
+let totalDepozit = 0;
+let totalKonvert = 0;
+
+function updateAnalytics() {
+  document.getElementById('stat-kredit').textContent = formatNumber(totalKredit) + ' soʻm';
+  document.getElementById('stat-depozit').textContent = formatNumber(totalDepozit) + ' soʻm';
+  document.getElementById('stat-konvert').textContent = totalKonvert + ' marta';
+}
+
 // ===== KREDIT =====
 document.getElementById('kredit-btn').addEventListener('click', () => {
   const P = parseFloat(document.getElementById('kredit-summa').value);
@@ -66,6 +77,9 @@ document.getElementById('kredit-btn').addEventListener('click', () => {
 
   const results = document.getElementById('kredit-results');
   results.classList.add('visible');
+
+  totalKredit += P;
+  updateAnalytics();
 
   if (tg) tg.HapticFeedback.notificationOccurred('success');
 });
@@ -93,6 +107,9 @@ document.getElementById('depozit-btn').addEventListener('click', () => {
 
   const results = document.getElementById('depozit-results');
   results.classList.add('visible');
+
+  totalDepozit += P;
+  updateAnalytics();
 
   if (tg) tg.HapticFeedback.notificationOccurred('success');
 });
@@ -177,6 +194,9 @@ document.getElementById('valyuta-btn').addEventListener('click', () => {
   const resultsEl = document.getElementById('valyuta-results');
   resultsEl.classList.add('visible');
 
+  totalKonvert++;
+  updateAnalytics();
+
   // Show rates
   const rateInfo = document.getElementById('valyuta-rate-info');
   rateInfo.innerHTML =
@@ -185,4 +205,86 @@ document.getElementById('valyuta-btn').addEventListener('click', () => {
     '1 EUR = ' + formatDecimal(rates.EUR_USD, 4) + ' USD</p>';
 
   if (tg) tg.HapticFeedback.notificationOccurred('success');
+});
+
+// ===== LOGIN MODULE =====
+const loginScreen = document.getElementById('login-screen');
+const loginBtn = document.getElementById('login-btn');
+const loginPin = document.getElementById('login-pin');
+const loginError = document.getElementById('login-error');
+
+loginBtn.addEventListener('click', () => {
+  if(loginPin.value === '1234') {
+    loginScreen.style.display = 'none';
+    if(tg) tg.HapticFeedback.notificationOccurred('success');
+  } else {
+    loginError.style.display = 'block';
+    if(tg) tg.HapticFeedback.notificationOccurred('error');
+  }
+});
+
+// ===== CHAT MODULE =====
+const chatSendBtn = document.getElementById('chat-send-btn');
+const chatInput = document.getElementById('chat-input');
+const chatMessages = document.getElementById('chat-messages');
+
+chatSendBtn.addEventListener('click', () => {
+  const text = chatInput.value.trim();
+  if(!text) return;
+  
+  const uMsg = document.createElement('div');
+  uMsg.className = 'message user';
+  uMsg.textContent = text;
+  chatMessages.appendChild(uMsg);
+  chatInput.value = '';
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  if(tg) tg.HapticFeedback.impactOccurred('light');
+
+  setTimeout(() => {
+    const bMsg = document.createElement('div');
+    bMsg.className = 'message bot';
+    bMsg.textContent = "So'rovingiz qabul qilindi! Operator tez orada javob beradi.";
+    chatMessages.appendChild(bMsg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    if(tg) tg.HapticFeedback.notificationOccurred('success');
+  }, 1000);
+});
+
+// ===== FILE UPLOAD MODULE =====
+const uploadArea = document.getElementById('upload-area');
+const fileInput = document.getElementById('file-input');
+const fileList = document.getElementById('file-list');
+
+uploadArea.addEventListener('click', () => fileInput.click());
+
+fileInput.addEventListener('change', (e) => {
+  const files = Array.from(e.target.files);
+  files.forEach(file => {
+    const item = document.createElement('div');
+    item.className = 'file-item';
+    item.innerHTML = `
+      <span>📄 ${file.name}</span>
+      <span class="remove" onclick="this.parentElement.remove()">✕</span>
+    `;
+    fileList.appendChild(item);
+  });
+});
+
+// ===== SETTINGS MODULE =====
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+darkModeToggle.addEventListener('change', (e) => {
+  if(e.target.checked) {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
+});
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+  loginScreen.style.display = 'flex';
+  loginPin.value = '';
+  loginError.style.display = 'none';
+  document.getElementById('tab-kredit').click();
+  document.body.classList.remove('dark-mode');
+  darkModeToggle.checked = false;
 });

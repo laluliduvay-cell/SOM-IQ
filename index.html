@@ -9,6 +9,24 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Login Screen Overlay -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-card">
+      <div class="header-logo" style="margin-bottom: 20px;">
+        <svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#1D9E75"/><text x="16" y="22" text-anchor="middle" font-size="16" font-weight="700" fill="white" font-family="system-ui">S</text></svg>
+        <h1 style="font-size: 24px;">SoʻmIQ</h1>
+      </div>
+      <div class="card-title">Tizimga kirish</div>
+      <div class="form-group">
+        <div class="input-wrapper">
+          <input type="password" id="login-pin" placeholder="PIN kod (1234)" inputmode="numeric" maxlength="4" style="text-align: center; letter-spacing: 12px; font-size: 20px;">
+        </div>
+      </div>
+      <p id="login-error" style="color: var(--error); font-size: 13px; text-align: center; margin-top: 10px; display: none;">Noto'g'ri PIN</p>
+      <button class="btn" id="login-btn" style="margin-top: 20px;">Kirish</button>
+    </div>
+  </div>
+
   <div class="app">
     <!-- Header -->
     <header class="header">
@@ -23,10 +41,16 @@
     </header>
 
     <!-- Tabs -->
-    <div class="tabs" role="tablist">
-      <button class="tab active" data-tab="kredit" role="tab" aria-selected="true" id="tab-kredit">Kredit</button>
-      <button class="tab" data-tab="depozit" role="tab" aria-selected="false" id="tab-depozit">Depozit</button>
-      <button class="tab" data-tab="valyuta" role="tab" aria-selected="false" id="tab-valyuta">Valyuta</button>
+    <div class="tabs-container">
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="kredit" role="tab" aria-selected="true" id="tab-kredit">Kredit</button>
+        <button class="tab" data-tab="depozit" role="tab" aria-selected="false" id="tab-depozit">Depozit</button>
+        <button class="tab" data-tab="valyuta" role="tab" aria-selected="false" id="tab-valyuta">Valyuta</button>
+        <button class="tab" data-tab="chat" role="tab" aria-selected="false" id="tab-chat">Chat</button>
+        <button class="tab" data-tab="fayllar" role="tab" aria-selected="false" id="tab-fayllar">Hujjatlar</button>
+        <button class="tab" data-tab="analitika" role="tab" aria-selected="false" id="tab-analitika">Analitika</button>
+        <button class="tab" data-tab="sozlamalar" role="tab" aria-selected="false" id="tab-sozlamalar">Sozlamalar</button>
+      </div>
     </div>
 
     <!-- KREDIT TAB -->
@@ -131,7 +155,7 @@
           <label for="valyuta-from">Qaysi valyutadan</label>
           <div class="select-wrapper">
             <select id="valyuta-from">
-              <option value="UZS">🇺🇿 UZS — Oʻzbek soʻmi</option>
+              <option value="UZS">🇺🇿 UZS — Ozbek soʻmi</option>
               <option value="USD" selected>🇺🇸 USD — AQSH dollari</option>
               <option value="EUR">🇪🇺 EUR — Yevro</option>
             </select>
@@ -159,6 +183,86 @@
         <div class="label" id="valyuta-result-label"></div>
       </div>
       <div class="rate-info" id="valyuta-rate-info"></div>
+    </div>
+
+    <!-- CHAT TAB -->
+    <div class="tab-content" id="chat" role="tabpanel" aria-labelledby="tab-chat">
+      <div class="card chat-card">
+        <div class="chat-messages" id="chat-messages">
+          <div class="message bot">Assalomu alaykum! Sizga qanday yordam bera olaman?</div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" id="chat-input" placeholder="Xabar yozing...">
+          <button class="chat-send-btn" id="chat-send-btn">
+            <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAYLLAR TAB -->
+    <div class="tab-content" id="fayllar" role="tabpanel" aria-labelledby="tab-fayllar">
+      <div class="card">
+        <div class="card-title">Hujjatlar yordamchisi</div>
+        <div class="upload-area" id="upload-area">
+          <svg viewBox="0 0 24 24" width="32" height="32" stroke="var(--primary)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          <p>Faylni yuklash uchun bosing</p>
+          <input type="file" id="file-input" style="display: none;" multiple>
+        </div>
+        <div class="file-list" id="file-list"></div>
+      </div>
+    </div>
+
+    <!-- ANALITIKA TAB -->
+    <div class="tab-content" id="analitika" role="tabpanel" aria-labelledby="tab-analitika">
+      <div class="card">
+        <div class="card-title">Moliya tahlili</div>
+        <div class="analytics-stat">
+          <div class="stat-label">Jami kredit hisoblari</div>
+          <div class="stat-value" id="stat-kredit">0 soʻm</div>
+        </div>
+        <div class="analytics-stat">
+          <div class="stat-label">Jami depozit hisoblari</div>
+          <div class="stat-value" id="stat-depozit">0 soʻm</div>
+        </div>
+        <div class="analytics-stat">
+          <div class="stat-label">Konvertatsiyalar soni</div>
+          <div class="stat-value" id="stat-konvert">0 marta</div>
+        </div>
+        <div class="chart-box">
+          <div class="chart-bar" style="height: 60%;"><span class="chart-label">Kredit</span></div>
+          <div class="chart-bar" style="height: 40%; background: #3b82f6;"><span class="chart-label">Depozit</span></div>
+          <div class="chart-bar" style="height: 80%; background: #f59e0b;"><span class="chart-label">Valyuta</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOZLAMALAR TAB -->
+    <div class="tab-content" id="sozlamalar" role="tabpanel" aria-labelledby="tab-sozlamalar">
+      <div class="card">
+        <div class="card-title">Sozlamalar</div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Tungi rejim</div>
+            <div class="setting-desc">Dastur ko'rinishini qoraytirish</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="dark-mode-toggle">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Bildirishnomalar</div>
+            <div class="setting-desc">Xabarlar orqali xabardor qilish</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <button class="btn" style="background: var(--error); margin-top: 20px;" id="logout-btn">Tizimdan chiqish</button>
+      </div>
     </div>
 
     <footer class="footer">
